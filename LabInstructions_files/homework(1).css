@@ -1,0 +1,255 @@
+body {
+    background: white;
+    color: black;
+    margin-left: 5%;
+    margin-right: 5%;
+    font-family: Helvetica, Arial, Verdana, sans-serif;
+    font-size: 11pt;
+}
+
+a { text-decoration: underline; }
+a:hover { text-decoration: underline; }
+
+.padded li { padding: 0pt 0pt 8pt 0pt; }
+.unpadded li { padding: 0pt 0pt 0pt 0pt; }
+/*  .padded li li { padding: 0pt; } */
+
+p.boxed  { 
+    width: 80%;
+    text-align: left;
+    padding: 6pt; 
+    border: 2pt solid black; 
+}
+
+pre.boxed {
+    border: thin solid black;
+    margin: 0.2em;
+    padding: 0.5em;
+    background-color: #ffffcc;
+}
+pre.code { color: blue; font-weight: bold; }
+
+.boxed.code.prettyprint { padding: 1em; }
+
+tt {
+    font-weight: bold;
+    font-size: 110%;
+    color: blue;
+    background: inherit;
+}
+
+
+tt.nocolor { color: inherit; background-color: transparent; }
+
+pre.boxed tt { background-color: transparent; }
+
+
+.typed, .typed * { color: green; }
+.term, .term * { color: blue; }
+/*
+*/
+
+strong {
+    padding: 4px;
+    font-size: 120%;
+}
+
+em {
+    font-weight: bold;
+    font-style: normal;
+    color: red;
+    background: white;
+}
+
+em:hover { background: yellow; }
+
+
+h1 { text-align: center; }
+h1+p { text-align:center; }
+h1 span.subtitle {font-size: 60%; font-weight: normal; display: block; }
+
+h3 {
+        text-decoration: underline;
+        margin-bottom: -10pt;
+}
+
+.notice {
+	background-color: yellow;
+	color: red;
+	font-size: 120%;
+}
+
+.centered {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.float-right {
+    float: right;
+}
+
+#footer {
+}   
+
+#handin {
+    padding: 0 20px;
+    border: thin solid black;
+    background-color: #ededff;
+} 
+
+div.boxed {
+    padding: 10px;
+    border: thin solid black;
+}
+
+div.specs {
+    padding: 2px;
+    margin: inherit 0;
+    background-color: #ededff;
+    border: thin solid black;
+}
+
+.highlight {
+    background-color: yellow;
+}
+
+address { font-size: xx-small; font-style: normal; }
+
+span.tiny { font-size: xx-small; font-style: italic; }
+
+q.honor { color: red; 
+          font-weight: bold;
+          font-family: "Comic Sans", "Comic Sans MS", cursive;
+        }
+
+ol.alpha { list-style-type: upper-alpha; }
+ol.lalpha { list-style-type: lower-alpha; }
+
+/* stuff for defining prototypes, etc. */
+dl.code dt {
+    font-family: monospace;
+    color: blue;
+    font-weight: bold;
+}
+
+dl.code dd+dt {
+    margin-top: 1em;
+}
+
+dl.code dd { margin-top: 0.5em; }
+
+dl.code { 
+    border: thin solid black;
+    background-color: #ededff;
+    padding: 0.5em;
+}
+
+ol.question {
+    background-color: #ccffcc;
+    padding-top: 8pt;
+    padding-right: 8pt;
+    padding-bottom: 8pt;
+    outline: 2pt dashed black;
+}
+ol.question>li {
+    padding-bottom: 1.5em;
+}
+span.printonly {
+    display: none;
+}
+
+div#top {
+    text-align: center;
+}
+
+div.prelab p {
+    text-align: justify;
+}
+
+@media screen {
+          strong { color: blue; font-weight: bold; }
+          tt { color: blue; font-weight: bold; font-size: 120%; }
+          tt:hover { background-color: #ffffcc; }
+          html {border: 10px solid #a44245; }
+      }
+
+@media print {
+    body {
+        background: white;
+        color: black;
+        font-size: 10pt;
+        font-family: serif;
+        /*
+        margin-left: 5%;
+        margin-right: 5%;
+        font-family: serif;
+        font-family: cursive;
+         */
+    }
+
+div#webonly >p,
+div#webonly >h1,
+div#webonly >h2,
+div#webonly >h3,
+div#webonly >h4,
+div#webonly >h5,
+div#webonly >h6,
+div#webonly >ul,
+div#webonly >pre,
+div#webonly >dl,
+div#webonly >hr,
+div#webonly >blockquote,
+div#webonly >address,
+div#webonly >ol {
+    display:none;
+}
+div#webonly ol.question {
+    display:block;
+    outline: none;
+}
+
+h1 { text-align: left; }
+
+div#webonly span.printonly { display: inline; }
+
+div#webonly .printinline {
+    display: inline;
+}
+
+div#webonly .printblock {
+    display: block;
+}
+
+div#webonly span.webonly {
+    display: none;
+}
+
+ol.question {
+    background-color: white;
+}
+.pagebreakhere {page-break-before: always;}
+
+
+    a, tt, 
+    .notice, #handin, 
+    .boxed, 
+    pre.boxed,
+    em, q.honor, 
+    pre.code, dl.code dt, dl.code,
+    .typed, .typed *  {
+        color:black;
+        background-color: white;
+    }
+
+    dl.code { border: none; padding: inherit;}
+
+    tt { font-size: 100%; }
+
+    a { text-decoration: underline; }
+
+    p { text-align: justify; }
+}
+

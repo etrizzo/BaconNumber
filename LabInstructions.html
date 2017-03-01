@@ -1,0 +1,532 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0061)https://www.cs.oberlin.edu/~rhoyle/16f-cs151/lab10/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<title>CSCI 151 - Lab 10</title>
+<link rev="made" href="mailto:Benjamin.Kuperman@oberlin.edu">
+
+<script src="./LabInstructions_files/run_prettify.js"></script>
+<link rel="stylesheet" type="text/css" href="./LabInstructions_files/homework.css">
+<link rel="stylesheet" type="text/css" href="./LabInstructions_files/homework(1).css">
+<style type="text/css">
+<!--
+table, td, th, tr {
+    padding: 3px;
+    border: thin solid black;
+    border-collapse: collapse;
+}
+a img { border: none; }
+table{
+    margin: 0 auto;
+}
+ol ol { list-style-type: upper-latin; }
+ol ol ol { list-style-type: upper-roman; }
+pre.boxed {border: solid black 2pt; padding: 1em; }
+
+table#exampleTable {
+    width: 100%;
+    text-align: center;
+    padding: 3px;
+}
+
+@media screen {
+          em { color: red; font-style: normal; }
+          strong { color: blue; font-weight: bold; }
+          tt { color: blue; font-weight: bold; font-size: 120%; }
+          tt:hover { background-color: #ffffcc; }
+          html {border: 10px solid #a44245; }
+      }
+
+-->
+</style>
+
+</head><body>
+    <h1>CSCI 151 - Lab 10
+        <span class="subtitle">Everything is better with Bacon</span></h1>
+<p>
+    <em>11:59pm, Friday 09 December 2016</em>
+</p>
+
+<!-- -->
+<hr>
+<p class="centered">
+<strong>You may work with a partner on this assignment.</strong>
+</p>
+<!-- -->
+<hr>
+
+
+<h2>Introduction</h2>
+<p>
+In class, we have been discussing how Graph structures might can be used to
+represent relationships between groups of objects.  For this assignment,
+you will be writing a program that allows you to play the 
+"<a href="http://en.wikipedia.org/wiki/Six_Degrees_of_Kevin_Bacon">Kevin Bacon Game</a>".
+A person's "<a href="http://en.wikipedia.org/wiki/Bacon_number#Bacon_numbers">Bacon Number</a>" is computed based on the number of
+movies of separation between that person and the actor Kevin Bacon.  For
+example, if you are Kevin Bacon, then your Bacon Number is 0.  If you were
+in a movie with Kevin Bacon, your number would be 1.  If you weren't in a
+movie with Kevin Bacon, but were in a movie with someone who was, your
+Bacon Number would be 2.  In short, your Bacon Number is one greater than
+the smallest Bacon Number of any of your co-stars.
+</p>
+
+<p>
+Note that this is a take off of <a href="http://en.wikipedia.org/wiki/Erdos_number">Erdos numbers</a> <!---(mine's
+3)--->, and the two can be combined to form the more elusive <a href="http://en.wikipedia.org/wiki/Erdos-Bacon_number">Erdos-Bacon
+    number</a>.
+</p>
+
+<p>
+    For fun and some additional background, you can try out the <a href="http://oracleofbacon.org/">Oracle of Bacon</a> at the University of Virginia.
+</p>
+
+<h2>Program Details</h2>
+<p>
+You will be writing a class called <tt>BaconNumber</tt> that will read a data
+file and allow you to interactively query the system for the Bacon Number
+and path for any actor in the database.  The program should require a single
+argument which is the filename containing the information on people and the
+roles they played in a movie.  An optional second argument can be used to
+specify the initial center.  After reading in the data, the program
+should then prompt the user for commands until an end-of-file (CTRL-D) is
+reached (<code>hasNextLine()</code> will return false).
+</p>
+
+<p>
+Similar to what you did in past labs, if the filename argument begins with
+"http:" you should treat it as an URL and read the file from the network.  This
+will enable you to play the game without having to download the entire file.
+To open a 
+<a href="http://www.cs.oberlin.edu/~gr151/jdk-1.6/docs/api/java/util/Scanner.html">Scanner</a>
+from an URL, you just need to do something similar to the following:
+</p>
+<pre class="boxed code prettyprint lang-java">Scanner s = new Scanner( new URL("http://www.cs.oberlin.edu/").openStream() );
+</pre>
+
+<h3>Sample command line usage</h3>
+<pre>% <span class="typed">java -Xmx2g BaconNumber imdb.full.txt</span> 
+        
+    # plays the game with the full data set centered at "Kevin Bacon (I)"
+
+% <span class="typed">java -Xmx2g BaconNumber imdb.pre1950.txt "Bela Lugosi"</span> 
+
+    # plays the game with the center set to "Bela Lugosi"
+
+% <span class="typed">java -Xmx2g BaconNumber http://www.cs.oberlin.edu/~gr151/imdb/imdb.no-tv-v.txt</span> 
+        
+    # plays the game with the no TV/V data set centered at "Kevin Bacon (I)" 
+</pre>
+<!--
+
+% <span class="typed">java -Xmx2g BaconNumber</span> 
+        
+    # plays the game using "http://www.cs.oberlin.edu/~gr151/imdb/imdb.no-tv-v.txt" centered at "Kevin Bacon (I)" 
+-->
+
+<h3>File Format</h3>
+<p>
+The movie data file contains information on what movies a performer appears
+in.  Every line contains information on one person appearing in one movie.
+The lines are formatted as follows:
+</p>
+
+<pre>    &lt;performer name&gt;|&lt;movie title&gt;
+</pre>
+
+<p>
+The vertical pipe character '|' can be used to determine where the name
+ends and the title begins.  There will only be one '|' on a line and there
+are no empty names or titles. <a href="http://www.cs.oberlin.edu/~gr151/jdk-1.6/docs/api/java/lang/String.html">java.lang.String</a> has a number of methods that can
+be used to divide up the line. (e.g., <code>split("\\|")</code>)
+</p>
+
+<p>
+I have supplied several data files of varying sizes for you to work with.  (Don't download them to your CS account, see below.)
+</p>
+
+<ul class="padded">
+    <li><tt><a href="http://cs.oberlin.edu/~gr151/imdb/imdb.cslam.txt">imdb.cslam.txt</a></tt> - a 11 line file with the example from the prelab</li>
+
+    <li><tt><a href="http://cs.oberlin.edu/~gr151/imdb/imdb.small.txt">imdb.small.txt</a></tt> - a 1817 line file with just a handful of performers (161), fully connected</li>
+
+    <li><tt><a href="http://cs.oberlin.edu/~gr151/imdb/imdb.top250.txt">imdb.top250.txt</a></tt> - a 14339 line file listing just the <a href="http://www.imdb.com/chart/top">top 250 movies</a> on IMDB.  (Disconnected groups of foreign films.) </li>
+
+    <li><tt><a href="http://cs.oberlin.edu/~gr151/imdb/imdb.pre1950.txt">imdb.pre1950.txt</a></tt> - a 966338 line file with movies made before 1950</li>
+
+    <li><tt><a href="http://cs.oberlin.edu/~gr151/imdb/imdb.post1950.txt">imdb.post1950.txt</a></tt> - a 6848516 line file with the movies made after 1950</li>
+
+    <li><tt><a href="http://cs.oberlin.edu/~gr151/imdb/imdb.only-tv-v.txt">imdb.only-tv-v.txt</a></tt> - a 2021636 line file with only made for TV and direct to video movies</li>
+
+    <li><tt><a href="http://cs.oberlin.edu/~gr151/imdb/imdb.no-tv-v.txt">imdb.no-tv-v.txt</a></tt> - a 5793218 line file without the made for TV and direct to video movies (best for the canonical Kevin Bacon game)</li>
+
+    <li><tt><a href="http://cs.oberlin.edu/~gr151/imdb/imdb.full.txt">imdb.full.txt</a></tt> - all 7814854 lines of IMDB for you to search through</li>
+</ul>
+
+<p>
+    Rather than cluttering up your account with these files, you can either use
+    the links above for URLs.  Also, once you have your lab folder created, you
+    can run <tt>151lab10setup</tt> from a lab machine and you'll get
+    symbolic links to the files in the current directory.
+    <em>Don't submit the imdb files when you handin the assignment.</em>
+</p>
+
+
+<p>
+    Other than the small database, you'll almost certainly need to increase the
+    amount of memory allowed via the <tt>-Xmx</tt> argument.
+</p>
+
+<h2>Commands to be supported</h2>
+<p>
+    Your program should read in the specified file and in the default case,
+    choose "Kevin Bacon (I)" as the initial center.  There are a number of commands
+    you are to support in order query the database and change the center.
+</p>
+
+<div class="specs">
+<ol class="qpadded">
+<li>
+    <p>
+        <b>find &lt;name&gt;</b> 
+    </p>
+    <p>
+        Find the shortest path from the current center to
+        <tt>&lt;name&gt;</tt>.  The output should be of the format
+    </p>
+    <pre class="code">    &lt;name1&gt; -&gt; &lt;movie1&gt; -&gt; &lt;name2&gt; -&gt; &lt;movie2&gt; -&gt; ... -&gt; Kevin Bacon (I) (n)</pre>
+
+    <p>
+        where &lt;name1&gt; is the person specified by the user and the movies
+        and actors in between show the path from that actor to the current
+        center.  The '(n)' should indicate the Bacon Number.  E.g., "find James
+        Earl Jones" in the "full" database yields 
+    </p>
+
+    <pre class="code">    James Earl Jones -&gt; Magic 7, The (2008) (TV) -&gt; Kevin Bacon (I) (1)
+    </pre>
+    
+    <p>
+    and in the "no-tv-v" set:
+    </p>
+
+    <pre class="code">    James Earl Jones -&gt; Blood Tide (1982) -&gt; Mary Louise Weller 
+            -&gt; Animal House (1978) -&gt; Kevin Bacon (I) (2)
+    </pre>
+    <!-- 
+    James Earl Jones -> Unforgivable Blackness: The Rise and Fall of Jack Johnson (2004) 
+        -> Billy Bob Thornton -> Sundance Skippy (2010) -> Kevin Bacon (I) (2)
+    -->
+
+    <p>
+        Note that your links may differ, but the path length should be the same.
+    </p>
+
+    <p>If someone is disconnected from the center simply print</p>
+
+    <pre class="code">    &lt;name&gt; is unreachable
+    </pre>
+</li>
+
+<!-- 
+<li>
+    <p>
+        <b>findall</b>
+    </p>
+    <p>
+        Iterate through all actors and actresses and perform a find operation
+        on them.
+    </p>
+</li>
+-->
+
+<li>
+    <p>
+        <b>recenter &lt;name&gt;</b>
+    </p>
+
+    <p>
+        Change the center to the given name if it exists in the database.  If
+        the name is not found, print an appropriate message and do not
+        change the center.
+    </p>
+</li>
+
+<li>
+    <p>
+        <b>avgdist</b>
+    </p>
+    <p>
+    Calculate the average Bacon Number for the given center among all
+    connected nodes.  Your output should be the following
+    </p>
+
+    <pre class="code">    &lt;avg&gt;&lt;tab&gt;&lt;name&gt;&lt;space&gt;(&lt;number reachable&gt;,&lt;number unreachable&gt;)
+    </pre>
+    <p>
+        The average should only be for the nodes reachable from the center.  In
+        the top250 database, I get the following
+    </p>
+
+    <pre class="code">    3.5942556977039737  Kevin Bacon (I) (11803,663)
+    </pre>
+
+    <p>
+        and in the "no-tv-v" set I get
+    </p>
+    <pre class="code">      3.003019238870945	    Kevin Bacon (I) (2221752,164815)
+
+    </pre>
+<!-- 
+    2.9791578395826392      Kevin Bacon (I) (1545905,89905)
+-->
+    </li>
+
+    <li>
+    <p>
+        <b>topcenter &lt;n&gt;</b>
+    </p>
+    <p>
+    For each actor in the current connected component (i.e., the one
+    containing the current center), calculate the average bacon distance to all
+    actors in that component.&nbsp; (NOTE: this can take a very long time on
+    larger data sets.)&nbsp; Then print a table of the n best centers (i.e.,
+    the ones whose average bacon distance is the smallest).
+    </p>
+    <p>
+    Calculate the average Bacon Number for all entries in the
+    database. NOTE: this can take a very long time on larger data sets.
+    </p>
+
+    <p>
+    In the top 250 set, my program finds 
+    "Robert Duvall (11803,663)"
+    is the best center  (~2.699) 
+    and the worst center is 
+     "Kumeko Otowa (11803,663)" (~6.378).
+    </p>
+
+    <p>
+        Here's the output from my running <tt>topcenter 5</tt> on the top250 dataset:
+    </p>
+    <pre>Enter a command: <span class="typed">topcenter 5</span> 
+2.6989748369058715  robert duvall
+2.7369312886554265  harrison ford (i)
+2.741930017792087   robert de niro
+2.776666949080742   john ratzenberger
+2.798017453189867   alec guinness
+    </pre>
+    </li>
+
+    <li>
+    <p>
+        <b>table</b> - print a table of the counts of bacon numbers for the given center from 0 up to the longest.
+    </p>
+        In the top250 database I get:
+    <p></p>
+    <pre>    Table of distances for Kevin Bacon (I)
+    Number    0:           1
+    Number    1:          87
+    Number    2:         539
+    Number    3:        4462
+    Number    4:        5786
+    Number    5:         840
+    Number    6:          88
+    Unreachable:         663
+    </pre>
+    <p>
+        in the no-tv-v database I get:
+    </p>
+    <pre>
+      Table of distances for Kevin Bacon (I)
+      Number	0:	1
+      Number	1:	3344
+      Number	2:	408925
+      Number	3:	1425751
+      Number	4:	349704
+      Number	5:	30061
+      Number	6:	3482
+      Number	7:	380
+      Number	8:	92
+      Number	9:	12
+      Unreachable: 	164815
+
+<!--    Table of distances for Kevin Bacon (I)
+    Number    0:           1
+    Number    1:        2911
+    Number    2:      345713
+    Number    3:     1173392
+    Number    4:      285458
+    Number    5:       23188
+    Number    6:        2435
+    Number    7:         268
+    Number    8:          49
+    Number    9:          21
+    Unreachable:      118796 -->
+    </pre>
+    <p>
+        and for the full database I get:
+    </p>
+    <pre>      Table of distances for Kevin Bacon (I)
+      Number	0:	1
+      Number	1:	5920
+      Number	2:	646684
+      Number	3:	1653925
+      Number	4:	289613
+      Number	5:	24138
+      Number	6:	2738
+      Number	7:	361
+      Number	8:	64
+      Number	9:	6
+      Unreachable:	176859
+<!--    Table of distances for Kevin Bacon (I)
+    Number    0:           1
+    Number    1:        5116
+    Number    2:      551017
+    Number    3:     1374902
+    Number    4:      235222
+    Number    5:       18234
+    Number    6:        1888
+    Number    7:         236
+    Number    8:          29
+    Number    9:          25
+    Unreachable:      127984  -->
+    </pre>
+    </li>
+</ol>
+</div>
+
+<h3>Additional commands</h3>
+<p>
+    You may opt to include additional other commands for consideration towards
+    extra credit.  For any additional commands you implement, you should
+    document them in the README file.  Be sure to explain what it does and how
+    someone could use it.
+</p>
+
+<p>
+    Here are some suggestions
+</p>
+
+<ol class="padded">
+    <li><b>findall</b> - Iterate through all actors and actresses and perform a find operation on them.</li>
+
+    <li><b>most</b> - list the actor with the most film credits (i.e., the actor vertex with the highest degree)</li>
+
+    <li><b>longest</b> - print out one of the longest paths to the center</li>
+
+    <li><b>movies &lt;name&gt;</b> - list all outbound edges from a given name</li>
+
+    <li>Present the user with a menu to pick from if the IMDB file cannot be
+        opened.  Just give the user text descriptions of the data sets and have
+        the URLs stored in your program. </li>
+    <!-- 
+    <li>Saving and restoring state via a serializable object</li>
+    -->
+</ol>
+
+<h3>Notes</h3>
+<p>
+The longest Bacon Number I found in the 'imdb.no-tv-v.txt' dataset for Kevin
+Bacon was 9 ("Andrea Parlato" and others).  "Kevin&nbsp;Bacon&nbsp;(I)" has an
+average distance value of ~2.994 while "Sean&nbsp;Connery" has ~2.955
+indicating that he is a better center than Kevin Bacon.  The Oracle of Bacon
+has a top 1000 list of centers which could be used to search for better values.
+</p>
+
+<h3>Programming Tips</h3>
+<p>
+As we have been discussing graphs, It should be no surprise that a good way
+to represent these acting relationships would be through a graph.  There
+are a number of ways in which this can be done, however, if you want to
+maintain a simple graph you might want to have both movies and actors be
+vertices and the edges simply being relationships between them.
+</p>
+
+<p>
+While an undirected graph could be used, the resulting path length will be
+double the Bacon Number.  You would need to divide the path length by 2 or
+use weights of 0.5 for the edges. Another technique would be to create a
+directed graph and weight the paths from actors to movies as 0 and movies
+to actors as 1.  Then, using Dijkstra's algorithm, you can find the
+shortest path where all actors and actresses that are listed for a movie
+can be consider equally.
+</p>
+
+<p>
+Remember that it is best to build and test your program incrementally.
+Construct your Graph class and be sure to include test cases in the main
+method.
+</p>
+
+<p>
+    If you decide to either use or model part of your implementation off of
+    what is in the book, be sure to give proper credit in the methods or
+    comments at the start of the file.
+</p>
+
+<p>
+You can improve your results by appending a "(I)" to a name and retrying
+the operation if it isn't found in the database before giving up.  (IMDB
+has been adding that to the end of a number of entries.)
+</p>
+
+<hr>
+<h2>What to Hand In</h2>
+<p>
+Use handin to submit the following files:
+</p>
+<ol>
+  <li> All .java files necessary for compiling your code</li>
+  <li> A README file with:
+    <ol style="list-style: alpha;">
+      <li> Your name (and your partner's name if you had one) </li>
+      <li> Any known problems or interesting design decisions that you made </li>
+      <li>Anything implemented for extra credit</li>
+      <li> 
+      <p>
+      If you adhered to the honor code in this assignment, add the
+      following statement to your <tt>README</tt> file:
+      </p>
+      <blockquote class="honor">
+          <p class="centered">
+          <q class="honor">I have adhered to the Honor Code in this assignment.</q>
+          </p>
+</blockquote>
+      </li>
+    </ol>
+  </li>
+</ol>
+<p>
+If you work with a partner, just submit one solution per team.
+</p>
+
+<h3>Acknowledgments</h3>
+<p>
+Information courtesy of The Internet Movie Database (http://www.imdb.com/).
+Used with permission. The data should only be used for personal and
+non-commercial purposes.
+</p>
+
+<h2>Grading Rubric</h2>
+<pre>Command line argument support: [/5]
+     Required methods: [/35]
+   Large file support: [/5]
+  README, javadocs, and style: [/5]
+
+Extra Methods: [0/10]
+Comments:
+
+TOTAL: [/50]
+</pre>
+
+
+<hr>
+<address><small>Last Modified: April 8, 2016 by Roberto Hoyle - Original by <a href="mailto:Benjamin.Kuperman@oberlin.edu">Benjamin A. Kuperman</a><a href="http://www.vim.org/"><img src="./LabInstructions_files/vim.jpg" style="float: right;" alt="VI Powered"></a></small></address>
+<!-- Created: April 10, 2008 -->
+
+
+<!--
+vim: ft=html:
+-->
+</body></html>
